@@ -8,9 +8,9 @@ typedef struct {
     float precio;
 } Producto;
 
-void ingresarProducto(Producto** inventario, int* numProductos) {
-    (*numProductos)++;
-    *inventario = (Producto*)realloc(*inventario, sizeof(Producto) * (*numProductos));
+void ingresarProducto(Producto** inventario, int* numeroProductos) {
+    (*numeroProductos)++;
+    *inventario = (Producto*)realloc(*inventario, sizeof(Producto) * (*numeroProductos));
 
     Producto nuevoProducto;
 
@@ -23,20 +23,20 @@ void ingresarProducto(Producto** inventario, int* numProductos) {
     printf("Ingrese el precio: ");
     scanf("%f", &nuevoProducto.precio);
 
-    // Limpiar el buffer de entrada
+    
     getchar();
 
-    (*inventario)[*numProductos - 1] = nuevoProducto;
+    (*inventario)[*numeroProductos - 1] = nuevoProducto;
 
     printf("Producto ingresado exitosamente.\n");
 }
 
-void editarProducto(Producto* inventario, int numProductos) {
+void editarProducto(Producto* inventario, int numeroProductos) {
     int indice;
-    printf("Ingrese el indice del producto a editar (0-%d): ", numProductos - 1);
+    printf("Ingrese el indice del producto a editar (1-%d): ", numeroProductos - 1);
     scanf("%d", &indice);
 
-    if (indice >= 0 && indice < numProductos) {
+    if (indice >= 1 && indice < numeroProductos) {
         Producto* producto = &inventario[indice];
 
         printf("Ingrese el nuevo nombre del producto: ");
@@ -48,28 +48,29 @@ void editarProducto(Producto* inventario, int numProductos) {
         printf("Ingrese el nuevo precio: ");
         scanf("%f", &producto->precio);
 
-        // Limpiar el buffer de entrada
+       
         getchar();
 
-        printf("Producto editado exitosamente.\n");
+        printf("Producto editado exitosamente.......\n");
+
     } else {
-        printf("Indice invalido.\n");
+        printf("Indice invalido.....\n");
     }
 }
 
-void eliminarProducto(Producto** inventario, int* numProductos) {
+void eliminarProducto(Producto** inventario, int* numeroProductos) {
     int indice;
-    printf("Ingrese el indice del producto a eliminar (0-%d): ", *numProductos - 1);
+    printf("Ingrese el indice del producto a eliminar (1-%d): ", *numeroProductos - 1);
     scanf("%d", &indice);
 
-    if (indice >= 0 && indice < *numProductos) {
-        for (int i = indice; i < *numProductos - 1; i++) {
+    if (indice >= 1 && indice < *numeroProductos) {
+        for (int i = indice; i < *numeroProductos - 1; i++) {
             (*inventario)[i] = (*inventario)[i + 1];
         }
 
-        (*numProductos)--;
-        Producto* temp = (Producto*)malloc(sizeof(Producto) * (*numProductos));
-        memcpy(temp, *inventario, sizeof(Producto) * (*numProductos));
+        (*numeroProductos)--;
+        Producto* temp = (Producto*)malloc(sizeof(Producto) * (*numeroProductos));
+        memcpy(temp, *inventario, sizeof(Producto) * (*numeroProductos));
         free(*inventario);
         *inventario = temp;
 
@@ -79,22 +80,26 @@ void eliminarProducto(Producto** inventario, int* numProductos) {
     }
 }
 
-void listarProductos(Producto* inventario, int numProductos) {
+void listarProductos(Producto* inventario, int numeroProductos) {
     printf("------ Lista de Productos ------\n");
-    for (int i = 0; i < numProductos; i++) {
+    for (int i = 0; i < numeroProductos; i++) {
         printf("Producto %d:\n", i);
+
         printf("Nombre: %s", inventario[i].nombre);
+
         printf("Cantidad: %d\n", inventario[i].cantidad);
+
         printf("Precio: %.2f\n", inventario[i].precio);
+
         printf("-----------------------------\n");
     }
 }
 
-void guardarInventario(Producto* inventario, int numProductos, const char* nombreArchivo) {
+void guardarInventario(Producto* inventario, int numeroProductos, const char* nombreArchivo) {
     FILE* archivo = fopen(nombreArchivo, "wb");
     if (archivo != NULL) {
-        fwrite(&numProductos, sizeof(int), 1, archivo);
-        fwrite(inventario, sizeof(Producto), numProductos, archivo);
+        fwrite(&numeroProductos, sizeof(int), 1, archivo);
+        fwrite(inventario, sizeof(Producto), numeroProductos, archivo);
         fclose(archivo);
         printf("Inventario guardado exitosamente.\n");
     } else {
@@ -102,12 +107,12 @@ void guardarInventario(Producto* inventario, int numProductos, const char* nombr
     }
 }
 
-void cargarInventario(Producto** inventario, int* numProductos, const char* nombreArchivo) {
+void cargarInventario(Producto** inventario, int* numeroProductos, const char* nombreArchivo) {
     FILE* archivo = fopen(nombreArchivo, "rb");
     if (archivo != NULL) {
-        fread(numProductos, sizeof(int), 1, archivo);
-        *inventario = (Producto*)malloc(sizeof(Producto) * (*numProductos));
-        fread(*inventario, sizeof(Producto), *numProductos, archivo);
+        fread(numeroProductos, sizeof(int), 1, archivo);
+        *inventario = (Producto*)malloc(sizeof(Producto) * (*numeroProductos));
+        fread(*inventario, sizeof(Producto), *numeroProductos, archivo);
         fclose(archivo);
         printf("Inventario cargado exitosamente.\n");
     } else {
@@ -117,53 +122,57 @@ void cargarInventario(Producto** inventario, int* numProductos, const char* nomb
 
 int main() {
     Producto* inventario = NULL;
-    int numProductos = 0;
+    int numeroProductos = 0;
     int opcion;
 
-    cargarInventario(&inventario, &numProductos, "inventario.dat");
+    cargarInventario(&inventario, &numeroProductos, "inventario.dat");
 
     do {
-        printf("\n----- Sistema de Inventario -----\n");
+        printf("----- Sistema de Inventario -----\n");
+
         printf("1. Ingresar producto\n");
+
         printf("2. Editar producto\n");
+
         printf("3. Eliminar producto\n");
+
         printf("4. Listar productos\n");
-        printf("5. Vender producto\n");
-        printf("6. Guardar inventario en archivo\n");
-        printf("7. Salir\n");
+
+        printf("5. Guardar inventario en archivo\n");
+
+        printf("6. Salir\n");
+
         printf("Ingrese una opcion: ");
         scanf("%d%*c", &opcion);
+        printf("------------------------------------\n");
 
         switch (opcion) {
             case 1:
-                ingresarProducto(&inventario, &numProductos);
+                ingresarProducto(&inventario, &numeroProductos);
                 break;
             case 2:
-                editarProducto(inventario, numProductos);
+                editarProducto(inventario, numeroProductos);
                 break;
             case 3:
-                eliminarProducto(&inventario, &numProductos);
+                eliminarProducto(&inventario, &numeroProductos);
                 break;
             case 4:
-                listarProductos(inventario, numProductos);
+                listarProductos(inventario, numeroProductos);
                 break;
+
             case 5:
-                // Aquí se implementaría la función de venderProducto
-                printf("Funcion venderProducto no implementada.\n");
+                guardarInventario(inventario, numeroProductos, "inventario.dat");
                 break;
             case 6:
-                guardarInventario(inventario, numProductos, "inventario.dat");
-                break;
-            case 7:
-                printf("Hasta luego!\n");
+                printf("Hasta luego!...\n");
                 break;
             default:
-                printf("Opcion invalida. Intente nuevamente.\n");
+                printf("Opcion invalida. Intente nuevamente......\n");
                 break;
         }
     } while (opcion != 7);
 
-    guardarInventario(inventario, numProductos, "inventario.dat");
+    guardarInventario(inventario, numeroProductos, "inventario.dat");
     free(inventario);
 
     return 0;
