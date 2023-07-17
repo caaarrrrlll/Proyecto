@@ -32,12 +32,12 @@ void ingresarProducto(Producto** inventario, int* numeroProductos) {
 }
 
 void editarProducto(Producto* inventario, int numeroProductos) {
-    int indice;
+    int ind;
     printf("Ingrese el indice del producto a editar (1-%d): ", numeroProductos - 1);
-    scanf("%d", &indice);
+    scanf("%d", &ind);
 
-    if (indice >= 1 && indice < numeroProductos) {
-        Producto* producto = &inventario[indice];
+    if (ind >= 1 && ind < numeroProductos) {
+        Producto* producto = &inventario[ind];
 
         printf("Ingrese el nuevo nombre del producto: ");
         fgets(producto->nombre, sizeof(producto->nombre), stdin);
@@ -51,20 +51,20 @@ void editarProducto(Producto* inventario, int numeroProductos) {
        
         getchar();
 
-        printf("Producto editado exitosamente.......\n");
+        printf("Producto editado exitosamente!\n");
 
     } else {
-        printf("Indice invalido.....\n");
+        printf("Indice ingresado es invalido, vuelva a digitar!....\n");
     }
 }
 
 void eliminarProducto(Producto** inventario, int* numeroProductos) {
-    int indice;
+    int ind;
     printf("Ingrese el indice del producto a eliminar (1-%d): ", *numeroProductos - 1);
-    scanf("%d", &indice);
+    scanf("%d", &ind);
 
-    if (indice >= 1 && indice < *numeroProductos) {
-        for (int i = indice; i < *numeroProductos - 1; i++) {
+    if (ind >= 1 && ind < *numeroProductos) {
+        for (int i = ind; i < *numeroProductos - 1; i++) {
             (*inventario)[i] = (*inventario)[i + 1];
         }
 
@@ -76,7 +76,7 @@ void eliminarProducto(Producto** inventario, int* numeroProductos) {
 
         printf("Producto eliminado exitosamente.\n");
     } else {
-        printf("Indice invalido.\n");
+        printf("Indice digitado es invalido, vuelva a digitar.....\n");
     }
 }
 
@@ -91,7 +91,7 @@ void listarProductos(Producto* inventario, int numeroProductos) {
 
         printf("Precio: %.2f\n", inventario[i].precio);
 
-        printf("-----------------------------\n");
+        printf("----------------------------------\n");
     }
 }
 
@@ -146,7 +146,7 @@ int main() {
         scanf("%d%*c", &opcion);
         printf("------------------------------------\n");
 
-        switch (opcion) {
+        switch (opcion) {   
             case 1:
                 ingresarProducto(&inventario, &numeroProductos);
                 break;
@@ -164,16 +164,16 @@ int main() {
                 guardarInventario(inventario, numeroProductos, "inventario.dat");
                 break;
             case 6:
-                printf("Hasta luego!...\n");
+                printf("Ha cerrado correctamente el programa!...\n");
                 break;
+
             default:
                 printf("Opcion invalida. Intente nuevamente......\n");
                 break;
         }
-    } while (opcion != 7);
+    } while (opcion != 6);
 
     guardarInventario(inventario, numeroProductos, "inventario.dat");
     free(inventario);
 
-    return 0;
 }
